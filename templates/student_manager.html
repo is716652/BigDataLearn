@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生信息管理系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: white;
+        }
+
+        .import-icon { background: linear-gradient(45deg, #4CAF50, #45a049); }
+        .export-icon { background: linear-gradient(45deg, #2196F3, #1976D2); }
+        .manage-icon { background: linear-gradient(45deg, #FF9800, #F57C00); }
+        .stats-icon { background: linear-gradient(45deg, #9C27B0, #7B1FA2); }
+
+        .card h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .file-upload-label:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .api-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .api-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .api-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .api-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .api-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .api-method {
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 10px;
+        }
+
+        .api-path {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .format-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .format-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .format-table th,
+        .format-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .format-table th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .format-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .required {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #95a5a6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 学生信息管理系统</h1>
+            <p>现代化的学生数据管理平台</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon import-icon">📤</div>
+                    <div>
+                        <h3>Excel导入</h3>
+                    </div>
+                </div>
+                <p>支持批量导入学生信息，包含姓名、学号、班级、手机号、邮箱等字段</p>
+                <div class="file-upload">
+                    <input type="file" id="fileInput" accept=".xlsx,.xls" />
+                    <label for="fileInput" class="file-upload-label">选择Excel文件</label>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon export-icon">📥</div>
+                    <div>
+                        <h3>数据导出</h3>
+                    </div>
+                </div>
+                <p>将学生信息导出为Excel文件，便于数据备份和分析</p>
+                <button class="btn" onclick="exportStudents()">导出学生数据</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon manage-icon">👥</div>
+                    <div>
+                        <h3>学生管理</h3>
+                    </div>
+                </div>
+                <p>查看、搜索、编辑和删除学生信息，支持分页浏览</p>
+                <button class="btn" onclick="viewStudents()">管理学生</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon stats-icon">📊</div>
+                    <div>
+                        <h3>统计分析</h3>
+                    </div>
+                </div>
+                <p>查看学生数量、班级分布等统计信息</p>
+                <button class="btn" onclick="loadStats()">查看统计</button>
+                <div class="stats-grid" id="statsGrid" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="api-section">
+            <h2>🔌 API接口文档</h2>
+            <div class="api-list">
+                <div class="api-item">
+                    <span class="api-method">POST</span>
+                    <span class="api-path">/api/students/import</span>
+                    <span>导入学生信息（Excel文件）</span>
+                </div>
+                <div class="api-item">
+                    <span class="api-method">GET</span>
+                    <span class="api-path">/api/students/export</span>
+                    <span>导出学生信息</span>
+                </div>
+                <div class="api-item">
+                    <span class="api-method">GET</span>
+                    <span class="api-path">/api/students</span>
+                    <span>获取学生列表（支持分页和搜索）</span>
+                </div>
+                <div class="api-item">
+                    <span class="api-method">DELETE</span>
+                    <span class="api-path">/api/students/{student_id}</span>
+                    <span>删除学生</span>
+                </div>
+                <div class="api-item">
+                    <span class="api-method">GET</span>
+                    <span class="api-path">/api/students/stats</span>
+                    <span>获取学生统计信息</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="format-section">
+            <h2>📋 Excel导入格式说明</h2>
+            <table class="format-table">
+                <thead>
+                    <tr>
+                        <th>列名</th>
+                        <th>数据类型</th>
+                        <th>是否必填</th>
+                        <th>示例</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>学生姓名</td>
+                        <td>文本</td>
+                        <td class="required">必填</td>
+                        <td>张三</td>
+                        <td>学生的真实姓名</td>
+                    </tr>
+                    <tr>
+                        <td>学号</td>
+                        <td>文本/数字</td>
+                        <td class="required">必填</td>
+                        <td>2021001</td>
+                        <td>唯一的学生标识</td>
+                    </tr>
+                    <tr>
+                        <td>班级</td>
+                        <td>文本</td>
+                        <td class="optional">可选</td>
+                        <td>计算机科学与技术1班</td>
+                        <td>学生所在班级</td>
+                    </tr>
+                    <tr>
+                        <td>手机号</td>
+                        <td>文本/数字</td>
+                        <td class="optional">可选</td>
+                        <td>13800138001</td>
+                        <td>联系电话</td>
+                    </tr>
+                    <tr>
+                        <td>邮箱</td>
+                        <td>文本</td>
+                        <td class="optional">可选</td>
+                        <td>zhangsan@example.com</td>
+                        <td>电子邮箱地址</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // 文件上传处理
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                uploadFile(file);
+            }
+        });
+
+        function uploadFile(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            showNotification('正在上传文件...', 'info');
+
+            fetch('/api/students/import', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(`成功导入 ${data.imported_count} 条学生记录`, 'success');
+                } else {
+                    showNotification(`导入失败: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('上传失败，请检查网络连接', 'error');
+            });
+        }
+
+        function exportStudents() {
+            showNotification('正在导出数据...', 'info');
+            window.open('/api/students/export', '_blank');
+        }
+
+        function viewStudents() {
+            // 这里可以跳转到学生管理页面或打开模态框
+            showNotification('学生管理功能开发中...', 'info');
+        }
+
+        function loadStats() {
+            fetch('/api/students/stats')
+            .then(response => response.json())
+            .then(data => {
+                displayStats(data);
+            })
+            .catch(error => {
+                showNotification('获取统计信息失败', 'error');
+            });
+        }
+
+        function displayStats(stats) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${stats.total_students || 0}</div>
+                    <div class="stat-label">总学生数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.total_classes || 0}</div>
+                    <div class="stat-label">班级数量</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${stats.recent_imports || 0}</div>
+                    <div class="stat-label">近期导入</div>
+                </div>
+            `;
+            statsGrid.style.display = 'grid';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            // 根据类型设置颜色
+            switch(type) {
+                case 'success':
+                    notification.style.background = '#4CAF50';
+                    break;
+                case 'error':
+                    notification.style.background = '#f44336';
+                    break;
+                case 'info':
+                    notification.style.background = '#2196F3';
+                    break;
+            }
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 页面加载时自动加载统计信息
+        window.addEventListener('load', function() {
+            setTimeout(loadStats, 1000);
+        });
+    </script>
+</body>
+</html>

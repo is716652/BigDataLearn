@@ -1,0 +1,13 @@
+-- 表结构: tokens
+-- 导出时间: 2025-08-25 20:20:11
+
+DROP TABLE IF EXISTS tokens;
+
+CREATE TABLE tokens (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  token TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);
+

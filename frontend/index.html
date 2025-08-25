@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>大数据基础 · Hadoop 学习平台</title>
+  <link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="site-header">
+  <div class="brand">🎓 Hadoop 学习平台</div>
+  <nav class="nav">
+    <button id="tab-learn" class="primary-nav active">📚 开始学习</button>
+    <button id="tab-profile">👤 个人中心</button>
+    <button id="tab-exam" class="secondary-nav">📝 模拟测试</button>
+    <button id="tab-admin" style="display:none;">⚙️ 管理</button>
+  </nav>
+</header>
+<main>
+  <!-- 学习页面 - 主要内容 -->
+  <section id="learn-page" class="page visible">
+    <div class="learning-hero">
+      <h1>🚀 探索大数据世界</h1>
+      <p>从基础概念到实战应用，系统掌握Hadoop生态系统</p>
+    </div>
+    
+    <!-- 学习模块卡片网格 -->
+    <div class="modules-grid" id="modules-grid">
+      <!-- 动态生成模块卡片 -->
+    </div>
+    
+    <!-- 选中模块后显示的知识点 -->
+    <div id="topics-section" class="topics-section" style="display:none;">
+      <h2 id="current-module-title">当前模块</h2>
+      <div class="progress-guide">
+        <div class="step-indicator">
+          <span class="step active">📖 选择知识点</span>
+          <span class="step">🔍 深入学习</span>
+          <span class="step">💡 实践练习</span>
+        </div>
+      </div>
+      <div id="topics" class="topics-grid"></div>
+    </div>
+    
+    <!-- 学习内容展示区 -->
+    <div id="content-section" class="content-section" style="display:none;">
+      <div class="content-header">
+        <h2 id="current-topic-title">当前主题</h2>
+        <div class="ai-actions">
+          <button id="ai-generate" class="btn ai-btn" disabled>✨ AI扩写内容</button>
+        </div>
+      </div>
+      <div id="content" class="content-cards"></div>
+    </div>
+  </section>
+
+  <!-- 个人中心页面 -->
+  <section id="profile-page" class="page">
+    <div class="profile-container">
+      <div id="auth-box" class="card auth-card">
+        <h3>🔐 登录学习平台</h3>
+        <p>学生使用学号登录 | 管理员用户名：admin</p>
+        <div class="login-form">
+          <input id="login-id" placeholder="学号或用户名"/>
+          <input id="login-pw" type="password" placeholder="密码（学生默认123456）"/>
+          <button id="btn-login" class="btn primary">登录</button>
+          <button id="btn-logout" class="btn secondary" style="display:none;">退出</button>
+        </div>
+        <div id="login-tip" class="tip"></div>
+      </div>
+      
+      <div id="profile-box" class="card profile-info" style="display:none;">
+        <h3>👤 个人信息</h3>
+        <div id="me" class="user-info"></div>
+      </div>
+      
+      <div id="history-box" class="card learning-history" style="display:none;">
+        <h3>📊 学习记录</h3>
+        <div id="history" class="history-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 模拟测试页面 - 次要功能 -->
+  <section id="exam-page" class="page">
+    <div class="exam-container">
+      <div class="exam-notice">
+        <h3>📝 模拟测试</h3>
+        <p>💡 建议先完成相关模块的学习，再进行测试验证</p>
+      </div>
+      
+      <div class="exam-controls">
+        <select id="exam-select" class="exam-select"></select>
+        <button id="start-exam" class="btn exam-btn">开始测试</button>
+      </div>
+      
+      <form id="exam-form" class="exam-form"></form>
+      <div id="exam-result" class="exam-result"></div>
+    </div>
+  </section>
+
+  <!-- 管理页面 -->
+  <section id="admin-page" class="page">
+    <div class="admin-container">
+      <div class="card admin-card">
+        <h3>📥 批量导入学生</h3>
+        <p>Excel格式：第一行表头（学号、姓名），后续每行一名学生</p>
+        <div class="import-controls">
+          <input type="file" id="excel-file" accept=".xlsx" class="file-input"/>
+          <button id="btn-import" class="btn import-btn">导入数据</button>
+        </div>
+        <div id="import-tip" class="tip"></div>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="/assets/app.js"></script>
+</body>
+</html>
